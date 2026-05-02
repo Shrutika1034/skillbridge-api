@@ -1,0 +1,7 @@
+Full Name: Shrutika Suresh
+Email: shrutika.suresh@example.com
+Phone: +91-XXXXXXXXXX
+GitHub Profile: https://github.com/shrutika-suresh
+
+Most Challenging Aspect:
+Implementing the dual-token authentication system for the Monitoring Officer role while ensuring that the scoped token (1-hour expiry) is properly validated separately from the standard login JWT, and coordinating this with the role-based access control across all endpoints to prevent unauthorized access while maintaining clean, maintainable code architecture.
