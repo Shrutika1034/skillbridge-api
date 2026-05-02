@@ -9,7 +9,7 @@ import secrets
 
 from src.database import (
     get_db, User as UserDB, Batch as BatchDB, 
-    BatchInvite as BatchInviteDB, RoleEnum
+    BatchInvite as BatchInviteDB, Institution as InstitutionDB, RoleEnum
 )
 from src.auth import get_current_user
 from src.models import (
@@ -42,10 +42,8 @@ async def create_batch(
     # Check authorization
     check_role(current_user, [RoleEnum.TRAINER, RoleEnum.INSTITUTION])
     
-    # Validate institution_id exists
-    institution = db.query(UserDB).filter(
-        and_(UserDB.id == request.institution_id, UserDB.role == RoleEnum.INSTITUTION)
-    ).first()
+    # Validate institution exists in the institutions table
+    institution = db.query(InstitutionDB).filter(InstitutionDB.id == request.institution_id).first()
     
     if not institution:
         raise HTTPException(
