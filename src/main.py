@@ -9,6 +9,7 @@ from contextlib import asynccontextmanager
 from src.database import engine, Base, get_db
 from src.routes import auth, batches, sessions, attendance, monitoring
 from src.config import settings
+from seed import seed_database
 
 # Create database tables on startup
 Base.metadata.create_all(bind=engine)
@@ -43,6 +44,15 @@ app.include_router(batches.router, prefix="/batches", tags=["Batches"])
 app.include_router(sessions.router, prefix="/sessions", tags=["Sessions"])
 app.include_router(attendance.router, prefix="/attendance", tags=["Attendance"])
 app.include_router(monitoring.router, prefix="/monitoring", tags=["Monitoring"])
+
+@app.post("/seed", tags=["Internal"])
+async def trigger_seed():
+    """
+    Trigger database seeding with test data.
+    Only works if the database is currently empty.
+    """
+    seed_database()
+    return {"message": "Database seeding triggered. Check logs for details."}
 
 @app.get("/", tags=["Health"])
 async def root():
