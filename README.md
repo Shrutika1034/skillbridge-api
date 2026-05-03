@@ -6,11 +6,13 @@ A role-based REST API for attendance tracking in a state-level skilling programm
 
 ### Live Deployment
 
-**Base URL:** `https://skillbridge-api.fly.dev` (example - actual URL will be provided after deployment)
+**Base URL:** `https://skillbridge-api-iw89.onrender.com`
+
+**API Documentation (Swagger):** `https://skillbridge-api-iw89.onrender.com/docs`
 
 **Health Check:**
 ```bash
-curl https://skillbridge-api.fly.dev/health
+curl https://skillbridge-api-iw89.onrender.com/health
 ```
 
 ### Test Accounts (Pre-seeded)
@@ -22,6 +24,47 @@ curl https://skillbridge-api.fly.dev/health
 | **Institution** | admin@techacademy.org | password123 | Tech Academy |
 | **Programme Manager** | pm@skillbridge.org | password123 | N/A |
 | **Monitoring Officer** | monitoring@skillbridge.org | password123 | N/A |
+
+---
+
+## ⚡ Testing the Live API (Quick Start)
+
+Your API is live and ready! Follow these steps to test the core functionality:
+
+### Step 1: Open API Docs
+Go to [https://skillbridge-api-iw89.onrender.com/docs](https://skillbridge-api-iw89.onrender.com/docs) to view the interactive Swagger UI.
+
+### Step 2: Seed the Database
+The database needs test data to work correctly.
+1. Go to your **Render Dashboard**.
+2. Click on the `skillbridge-api` service.
+3. Click the **"Shell"** tab.
+4. Run: `python seed.py`
+5. You should see `DATABASE SEEDING COMPLETED SUCCESSFULLY`.
+
+### Step 3: Login (Get JWT Token)
+Use the Swagger UI or curl:
+```bash
+curl -X POST https://skillbridge-api-iw89.onrender.com/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "student1@example.com",
+    "password": "password123"
+  }'
+```
+**Copy the `access_token`** from the response.
+
+### Step 4: Test Protected Endpoints
+Use the token in the `Authorization` header:
+```bash
+curl -X POST https://skillbridge-api-iw89.onrender.com/attendance/mark \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "session_id": 1,
+    "status": "present"
+  }'
+```
 
 ---
 
@@ -180,7 +223,7 @@ Output shows all test account credentials.
 
 #### Sign Up
 ```bash
-curl -X POST http://localhost:8000/auth/signup \
+curl -X POST https://skillbridge-api-iw89.onrender.com/auth/signup \
   -H "Content-Type: application/json" \
   -d '{
     "name": "Jane Doe",
@@ -202,7 +245,7 @@ Response:
 
 #### Login
 ```bash
-curl -X POST http://localhost:8000/auth/login \
+curl -X POST https://skillbridge-api-iw89.onrender.com/auth/login \
   -H "Content-Type: application/json" \
   -d '{
     "email": "student1@example.com",
@@ -214,7 +257,7 @@ curl -X POST http://localhost:8000/auth/login \
 
 #### Create Batch (Trainer/Institution)
 ```bash
-curl -X POST http://localhost:8000/batches \
+curl -X POST https://skillbridge-api-iw89.onrender.com/batches \
   -H "Authorization: Bearer YOUR_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -225,7 +268,7 @@ curl -X POST http://localhost:8000/batches \
 
 #### Generate Invite Link (Trainer)
 ```bash
-curl -X POST http://localhost:8000/batches/1/invite \
+curl -X POST https://skillbridge-api-iw89.onrender.com/batches/1/invite \
   -H "Authorization: Bearer YOUR_TOKEN"
 ```
 
@@ -242,7 +285,7 @@ Response:
 
 #### Join Batch (Student)
 ```bash
-curl -X POST http://localhost:8000/batches/join \
+curl -X POST https://skillbridge-api-iw89.onrender.com/batches/join \
   -H "Authorization: Bearer YOUR_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -254,7 +297,7 @@ curl -X POST http://localhost:8000/batches/join \
 
 #### Create Session (Trainer)
 ```bash
-curl -X POST http://localhost:8000/sessions \
+curl -X POST https://skillbridge-api-iw89.onrender.com/sessions \
   -H "Authorization: Bearer YOUR_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -268,7 +311,7 @@ curl -X POST http://localhost:8000/sessions \
 
 #### Get Session Attendance (Trainer)
 ```bash
-curl -X GET http://localhost:8000/sessions/1/attendance \
+curl -X GET https://skillbridge-api-iw89.onrender.com/sessions/1/attendance \
   -H "Authorization: Bearer YOUR_TOKEN"
 ```
 
@@ -293,7 +336,7 @@ Response:
 
 #### Mark Attendance (Student)
 ```bash
-curl -X POST http://localhost:8000/attendance/mark \
+curl -X POST https://skillbridge-api-iw89.onrender.com/attendance/mark \
   -H "Authorization: Bearer YOUR_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -306,7 +349,7 @@ Allowed statuses: `present`, `absent`, `late`
 
 #### Batch Summary (Institution)
 ```bash
-curl -X GET http://localhost:8000/batches/1/summary \
+curl -X GET https://skillbridge-api-iw89.onrender.com/batches/1/summary \
   -H "Authorization: Bearer YOUR_TOKEN"
 ```
 
@@ -323,13 +366,13 @@ Response:
 
 #### Institution Summary (Programme Manager)
 ```bash
-curl -X GET http://localhost:8000/institutions/1/summary \
+curl -X GET https://skillbridge-api-iw89.onrender.com/institutions/1/summary \
   -H "Authorization: Bearer YOUR_TOKEN"
 ```
 
 #### Programme Summary (Programme Manager)
 ```bash
-curl -X GET http://localhost:8000/programme/summary \
+curl -X GET https://skillbridge-api-iw89.onrender.com/programme/summary \
   -H "Authorization: Bearer YOUR_TOKEN"
 ```
 
@@ -337,7 +380,7 @@ curl -X GET http://localhost:8000/programme/summary \
 
 #### Get All Attendance Data (Monitoring Officer)
 ```bash
-curl -X GET http://localhost:8000/monitoring/attendance \
+curl -X GET https://skillbridge-api-iw89.onrender.com/monitoring/attendance \
   -H "Authorization: Bearer YOUR_MONITORING_TOKEN"
 ```
 
@@ -360,7 +403,7 @@ Returns complete programme-wide attendance data:
 
 #### POST to Monitoring (Returns 405)
 ```bash
-curl -X POST http://localhost:8000/monitoring/attendance \
+curl -X POST https://skillbridge-api-iw89.onrender.com/monitoring/attendance \
   -H "Authorization: Bearer YOUR_TOKEN" \
   -d '{}'
 ```
@@ -398,7 +441,7 @@ Response: `405 Method Not Allowed`
 
 1. **Get token from login:**
 ```bash
-RESPONSE=$(curl -X POST http://localhost:8000/auth/login \
+RESPONSE=$(curl -X POST https://skillbridge-api-iw89.onrender.com/auth/login \
   -H "Content-Type: application/json" \
   -d '{
     "email": "student1@example.com",
@@ -410,7 +453,7 @@ TOKEN=$(echo $RESPONSE | jq -r '.access_token')
 
 2. **Use token in Authorization header:**
 ```bash
-curl -X GET http://localhost:8000/sessions/1/attendance \
+curl -X GET https://skillbridge-api-iw89.onrender.com/sessions/1/attendance \
   -H "Authorization: Bearer $TOKEN"
 ```
 
