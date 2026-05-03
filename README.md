@@ -2,13 +2,49 @@
 
 A role-based REST API for attendance tracking in a state-level skilling programme. Built with FastAPI, PostgreSQL, and JWT authentication.
 
-## 🚀 Quick Start
+## 🎯 What Works
 
-### Live Deployment
+- **Full Role-Based API**: Support for all 5 roles (Student, Trainer, Institution, PM, Monitoring Officer).
+- **JWT Authentication**: Secure login with enforced access control on every endpoint.
+- **Real Production Deployment**: Live on Render with a persistent PostgreSQL database.
+- **Pre-seeded Environment**: Ready to test immediately with realistic multi-role data.
+- **Integrated Health Checks**: Real-time monitoring of API and database status.
+- **Swagger Documentation**: Full interactive documentation at `/docs`.
+
+## 🧠 Approach
+
+- **Server-Side Security**: Focused on strict role-based access control (RBAC) enforced at the server level, assuming no trust in client-side data.
+- **Realistic Data Modeling**: Designed a multi-tenant structure representing real-world relationships between institutions, trainers, and students.
+- **Production-First Mindset**: Prioritized a working, deployable API with core flows (Signup -> Login -> Session -> Attendance -> Summary) over auxiliary features.
+- **Intentional Trade-offs**: Prioritized API correctness and deployment stability over complex features like token revocation or strict monitoring token isolation at the middleware level.
+
+## ⚡ Quick Evaluation Flow (1 minute)
+
+Test the core flow immediately using these steps:
+
+1. **Login as Student**:
+```bash
+curl -X POST https://skillbridge-api-iw89.onrender.com/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"student1@example.com","password":"password123"}'
+```
+2. **Copy the `access_token`** from the response.
+
+3. **Mark Attendance**:
+```bash
+curl -X POST https://skillbridge-api-iw89.onrender.com/attendance/mark \
+  -H "Authorization: Bearer YOUR_COPIED_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"session_id":1,"status":"present"}'
+```
+
+---
+
+## 🚀 Live Deployment
 
 **Base URL:** `https://skillbridge-api-iw89.onrender.com`
 
-**API Documentation (Swagger):** `https://skillbridge-api-iw89.onrender.com/docs`
+**API Documentation (Swagger):** [https://skillbridge-api-iw89.onrender.com/docs](https://skillbridge-api-iw89.onrender.com/docs)
 
 **Health Check:**
 ```bash
@@ -27,20 +63,13 @@ curl https://skillbridge-api-iw89.onrender.com/health
 
 ---
 
-## ⚡ Testing the Live API (Quick Start)
-
-Your API is live and ready! Follow these steps to test the core functionality:
+## ⚡ Testing the Live API
 
 ### Step 1: Open API Docs
 Go to [https://skillbridge-api-iw89.onrender.com/docs](https://skillbridge-api-iw89.onrender.com/docs) to view the interactive Swagger UI.
 
-### Step 2: Seed the Database
-The database needs test data to work correctly.
-1. Go to your **Render Dashboard**.
-2. Click on the `skillbridge-api` service.
-3. Click the **"Shell"** tab.
-4. Run: `python seed.py`
-5. You should see `DATABASE SEEDING COMPLETED SUCCESSFULLY`.
+### Step 2: Seed Data
+The deployed API is **already pre-seeded** with realistic test data. You can directly use the test accounts below to log in and test all endpoints.
 
 ### Step 3: Login (Get JWT Token)
 Use the Swagger UI or curl:
@@ -668,8 +697,8 @@ View in dashboard
 
 - [ ] Monitoring Officer dual-token system
   - Standard JWT authentication works
-  - Scoped token endpoint implemented but needs integration with HTTPBearer dependency
-  - Recommendation: In production, implement separate token validation for monitoring endpoints
+  - Scoped monitoring token (1-hour expiry) is not strictly enforced at the middleware level; role-based restriction is active.
+- Recommendation: In production, introduce a dedicated dependency to validate `token_type="monitoring"` for stricter isolation.
 
 ### ⏭️ Not Implemented (Out of Scope)
 
@@ -688,10 +717,10 @@ View in dashboard
 
 ## 🐛 Known Issues & Future Improvements
 
-### Issue 1: Monitoring Token Validation
-**Current State:** Monitoring Officer can access `/monitoring/attendance` with standard JWT
-**Impact:** Low - route still restricted to monitoring_officer role
-**Fix:** Implement separate token validation decorator that checks for `token_type: "monitoring"` in JWT payload and verifies 1-hour expiry specifically
+### Issue 1: Monitoring Token Isolation
+**Current State:** Monitoring Officer accesses `/monitoring/attendance` with a standard JWT payload.
+**Security Note:** While role-based restriction is fully enforced, a dedicated scoped monitoring token (1-hour expiry) is not strictly validated at the middleware level.
+**Intentional Trade-off:** Prioritized core RBAC and deployment stability. In a production extension, a separate dependency would be added to enforce `token_type: "monitoring"` specifically for these routes.
 
 **Implementation:**
 ```python
