@@ -7,9 +7,18 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+from pydantic import field_validator
+
 class Settings(BaseSettings):
     # Database
     DATABASE_URL: str = "postgresql://user:password@localhost/skillbridge"
+    
+    @field_validator("DATABASE_URL")
+    @classmethod
+    def fix_postgres_protocol(cls, v: str) -> str:
+        if v.startswith("postgres://"):
+            return v.replace("postgres://", "postgresql://", 1)
+        return v
     
     # JWT
     SECRET_KEY: str = "your-secret-key-change-in-production"
