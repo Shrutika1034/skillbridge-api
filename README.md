@@ -10,12 +10,13 @@ A role-based REST API for attendance tracking in a state-level skilling programm
 - **Pre-seeded Environment**: Ready to test immediately with realistic multi-role data.
 - **Integrated Health Checks**: Real-time monitoring of API and database status.
 - **Swagger Documentation**: Full interactive documentation at `/docs`.
+- **End-to-End Flow Verified**: Signup → Login → Session → Attendance → Summary tested on live deployment.
 
 ## 🧠 Approach
 
 - **Server-Side Security**: Focused on strict role-based access control (RBAC) enforced at the server level, assuming no trust in client-side data.
 - **Realistic Data Modeling**: Designed a multi-tenant structure representing real-world relationships between institutions, trainers, and students.
-- **Production-First Mindset**: Prioritized a working, deployable API with core flows (Signup -> Login -> Session -> Attendance -> Summary) over auxiliary features.
+- **Production-First Mindset**: Prioritized correctness of core flows and a working deployed system over additional features like token revocation and strict monitoring token isolation.
 - **Intentional Trade-offs**: Prioritized API correctness and deployment stability over complex features like token revocation or strict monitoring token isolation at the middleware level.
 
 ## ⚡ Quick Evaluation Flow (1 minute)
@@ -656,7 +657,7 @@ python seed.py
 
 2. **Test Live API:**
 ```bash
-curl https://your-api-domain.com/health
+curl https://skillbridge-api-iw89.onrender.com/health
 ```
 
 3. **Monitor Logs:**
