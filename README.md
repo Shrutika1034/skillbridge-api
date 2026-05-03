@@ -49,7 +49,12 @@ curl -X POST https://skillbridge-api-iw89.onrender.com/attendance/mark \
 
 **Health Check:**
 ```bash
-curl https://skillbridge-api-iw89.onrender.com/health
+curl https://skillbridge-api-iw89.onrender.com/health or 
+Invoke-RestMethod https://skillbridge-api-iw89.onrender.com/health(Powershell Command)
+```
+**Response:**
+```json
+{"status": "healthy"}
 ```
 
 ### Test Accounts (Pre-seeded)
